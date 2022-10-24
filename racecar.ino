@@ -3,7 +3,7 @@
  *  and from the Robotic Behavior assignment code.*/
 // Include library for the sonar sensor
 #include <SoftwareSerial.h> 
-#include "libraries/NewPing/src/NewPing.cpp"
+#include "lib/NewPing/src/NewPing.cpp"
 #include "src/Driver.c"
 
 // Defines pins for IR sensor 
