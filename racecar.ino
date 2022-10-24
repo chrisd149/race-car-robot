@@ -1,7 +1,3 @@
-/* Source code was adopted from 
- *  https://create.arduino.cc/projecthub/diy_burner/how-to-make-arduino-human-following-robot-32ca7d 
- *  and from the Robotic Behavior assignment code.*/
-// Include library for the sonar sensor
 #include <SoftwareSerial.h> 
 #include "lib/NewPing/src/NewPing.cpp"
 #include "src/Driver.c"
@@ -40,6 +36,7 @@ void setup() {
 }
 
 int check_sensors(){
+  // TODO: add checks
   return 1;
 }
 
@@ -69,7 +66,7 @@ void loop(){
   }**/
   
   if (mode == false){
-    
+    // TODO: manual drive
   }
   if (mode == true){
     // Sonar detects distance of less than 10cm
