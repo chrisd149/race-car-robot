@@ -11,19 +11,19 @@
 #define MAX_DISTANCE 100
 
 int flag = 0; 
-int LED = 8; 
-bool mode = true;
+char data;
+bool mode = false;
 bool debug = true;
 
 // Initalize the sonar sensor  
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 // Initalize the bluetooth module
-SoftwareSerial MyBlue(2, 3); // RX | TX 
+SoftwareSerial tooth(4, 5); // RX | TX 
 
 // Setup code - only ran at start-up
 void setup() {
   Serial.begin(9600);
-  MyBlue.begin(9600);
+  tooth.begin(9600);
   // Define right IR sensor
   pinMode(RIGHT, INPUT);
   // Define left IR sensor
@@ -40,7 +40,65 @@ int check_sensors(){
   return 1;
 }
 
+void drive(){
+// Drive command sent, send to Driver input
+  switch (data){
+  case 'S':
+    // No user input - stop 
+    station();
+    break;
+  case 'F':
+    // Forward
+    forward();
+    break;
+  case 'B':
+    // Backward
+    backward();
+    break;
+  case 'R':
+    // Right
+    right();
+    break;
+  case 'L':
+    // Left
+    left();
+    break;
+  default:
+    // No input at all - stop 
+    // TODO: LOS stuff
+    station();
+    break;
+  }
+}
+
+char input(){
+  // Check bluetooth is connected
+  if (tooth.available() > 0){
+    // Read Bluetooth data (should be a single digit char)
+    return tooth.read();
+  }
+  else{
+    return ':';
+  }
+}
+
+void output(int sonar, int command){
+  // Send Serial stuff to app
+  tooth.write(sonar); // In cm
+  tooth.write(command); 
+}
+
 void loop(){
+  data = input();
+  if (data == ':'){
+    Serial.print("No signal");
+  }
+  if (data == 'M'){
+    mode = !mode;
+  }
+  if (data == 'D'){
+    debug = !debug;
+  }
   int delay = 10;
   
   // Assign distance variable to the sonar distance
@@ -51,7 +109,7 @@ void loop(){
   int Right_Value = digitalRead(RIGHT);
   // Left IR sensor
   int Left_Value = digitalRead(LEFT);
-
+  
   if (debug == true){
     delay = 500;
   }
@@ -64,10 +122,14 @@ void loop(){
   if (check_sensors()== 2){
     continue; 
   }**/
-  
+
+  // Manual Drive mode
   if (mode == false){
-    // TODO: manual drive
+    drive();
+    output(distance, data);
   }
+  
+  // Object Following mode
   if (mode == true){
     // Sonar detects distance of less than 10cm
     if(distance < 10) 
@@ -122,5 +184,6 @@ void loop(){
       }
     }
   }
+  // Wait for x miliseconds 
   delayMicroseconds(delay);
 }

@@ -1,5 +1,5 @@
-#ifndef DRIVER
-#define DRIVER
+#ifndef Driver
+#define Driver
 
 // Defines some constants for the motor pins
 const int in1 = 5;
