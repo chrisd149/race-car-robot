@@ -10,7 +10,7 @@
 #define ECHO_PIN A0
 #define MAX_DISTANCE 100
 
-int flag = 0; 
+int com_time; 
 char data;
 bool mode = false;
 bool debug = true;
@@ -63,9 +63,11 @@ void drive(){
     // Left
     left();
     break;
+  case 'I':
+    // Heartbeat - do nothing
+    break;
   default:
-    // No input at all - stop 
-    // TODO: LOS stuff
+    // Big error, stop
     station();
     break;
   }
@@ -75,6 +77,7 @@ char input(){
   // Check bluetooth is connected
   if (tooth.available() > 0){
     // Read Bluetooth data (should be a single digit char)
+    com_time = millis();
     return tooth.read();
   }
   else{
@@ -82,19 +85,24 @@ char input(){
   }
 }
 
-void output(int sonar, int command){
+void output(int sonar){
   // Send Serial stuff to app
   tooth.write(sonar); // In cm
-  tooth.write(command); 
 }
 
 void loop(){
+  // Get Bluetooth serial data (char)
   data = input();
-  if (data == ':'){
-    Serial.print("No signal");
+  if (data == ':' && (com_time + 5) < millis()){
+    station();
+    Serial.print("LOS - Stopping");
+  }
+  if (data == 'I'){
+    Serial.print("Proceed");
   }
   if (data == 'M'){
     mode = !mode;
+    station();
   }
   if (data == 'D'){
     debug = !debug;
@@ -124,9 +132,9 @@ void loop(){
   }**/
 
   // Manual Drive mode
-  if (mode == false){
+  if (mode == false && input != 'I' && input != ':' && input != 'D'){
     drive();
-    output(distance, data);
+    output(distance);
   }
   
   // Object Following mode
