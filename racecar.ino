@@ -5,26 +5,28 @@
 // Lights
 #define FRONT_LIGHTS 10
 #define BACK_LIGHTS 11
-#define BLUETOOTH_LIGHT 12
+#define BLUETOOTH_LIGHT 13
 // Defines pins for IR sensor 
-#define RIGHT A2
-#define LEFT A3
+#define RIGHT 6
+#define LEFT 5
 // Defines pins for sonar sensor
-#define TRIGGER_PIN A1
-#define ECHO_PIN A0
+#define TRIGGER_PIN 7
+#define ECHO_PIN 8
 #define MAX_DISTANCE 100
 
-int com_time; 
 int interval;
-char data;
+int timeout = 0;
+char data = 'S';
+char last_input = 'S';
 bool mode = false;
 bool debug = true;
 bool paired = false;
+bool parked = true;
 
 // Initalize the sonar sensor  
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 // Initalize the bluetooth module
-SoftwareSerial tooth(4, 5); // RX | TX 
+SoftwareSerial tooth(2, 3); // RX | TX 
 
 // Setup code - only ran at start-up
 void setup() {
@@ -46,10 +48,11 @@ void setup() {
 }
 
 void manual_input(){
-// Drive command sent, send to Driver input
+  // Drive command sent, send to Driver input
+  last_input = data;
   switch (data){
   case 'S':
-    // No user input - stop 
+    // Stop 
     station();
     digitalWrite(BACK_LIGHTS, HIGH);
     break;
@@ -76,10 +79,6 @@ void manual_input(){
   case 'I':
     // Heartbeat - do nothing
     break;
-  case 'M':
-    mode = !mode;
-    station();
-    break;
   default:
     // Big error, stop
     station();
@@ -91,7 +90,6 @@ char input(){
   // Check bluetooth is connected
   if (tooth.available() > 0){
     // Read Bluetooth data (should be a single digit char)
-    com_time = millis();
     digitalWrite(BLUETOOTH_LIGHT, HIGH);
     paired = true;
     return tooth.read();
@@ -108,25 +106,48 @@ void output(int sonar){
 
 void loop(){
   data = input();
-  if (data == ':' && paired == false){
+  // TODO: fixed this up a bit
+  // Currently spams stop commands in parked, not bad, but wastes resources
+  if (paired == false){
+    if (parked == false){
       data = 'S';
+      parked = true;
+    }
+    else {
+      data = 'I';
+    }
   }
   
-  // Stop if no command has been sent in 2.5 seconds
-  if (data == ':' && (com_time + 2.5) < millis()){
-    digitalWrite(BLUETOOTH_LIGHT, LOW);
-    digitalWrite(BACK_LIGHTS, HIGH);
+  if (paired == true){
+    if (data != ':'){
+      timeout = 0;
+    }
+    else if (data == ':'){
+      timeout += 1;
+    }
+    if (timeout > 50){
+      digitalWrite(BLUETOOTH_LIGHT, LOW);
+      digitalWrite(BACK_LIGHTS, HIGH);
+      station();
+      Serial.print("LOS - Stopping");
+      paired = false;
+      mode = false;
+      timeout = 0;
+    }
+  }
+
+  if (data == 'M'){
+    mode = !mode;
     station();
-    Serial.print("LOS - Stopping");
-    paired = false;
-    mode = false;
   }
   
+  Serial.print(data);
   // Assign distance variable to the sonar distance
   unsigned int distance = sonar.ping_cm();
-
+    
   // Manual Drive mode
-  if (mode == false){
+  if (mode == false && data != 'M'){
+    parked = false;
     interval = 25;
     manual_input();
     output(distance);
@@ -193,5 +214,5 @@ void loop(){
     }
   }
   // Wait for x miliseconds 
-  delayMicroseconds(interval);
+  delay(interval);
 }
