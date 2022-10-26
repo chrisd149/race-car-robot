@@ -2,6 +2,10 @@
 #include "lib/NewPing/src/NewPing.cpp"
 #include "src/Driver.c"
 
+// Lights
+#define FRONT_LIGHTS 10
+#define BACK_LIGHTS 11
+#define BLUETOOTH_LIGHT 12
 // Defines pins for IR sensor 
 #define RIGHT A2
 #define LEFT A3
@@ -11,9 +15,11 @@
 #define MAX_DISTANCE 100
 
 int com_time; 
+int interval;
 char data;
 bool mode = false;
 bool debug = true;
+bool paired = false;
 
 // Initalize the sonar sensor  
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
@@ -28,6 +34,10 @@ void setup() {
   pinMode(RIGHT, INPUT);
   // Define left IR sensor
   pinMode(LEFT, INPUT);
+  // LEDs
+  pinMode(FRONT_LIGHTS, OUTPUT);
+  pinMode(BACK_LIGHTS, OUTPUT);
+  pinMode(BLUETOOTH_LIGHT, OUTPUT);
   // Assign pins for motors
   pinMode(in1, OUTPUT);
   pinMode(in2, OUTPUT);
@@ -35,36 +45,40 @@ void setup() {
   pinMode(in4, OUTPUT);
 }
 
-int check_sensors(){
-  // TODO: add checks
-  return 1;
-}
-
-void drive(){
+void manual_input(){
 // Drive command sent, send to Driver input
   switch (data){
   case 'S':
     // No user input - stop 
     station();
+    digitalWrite(BACK_LIGHTS, HIGH);
     break;
   case 'F':
     // Forward
     forward();
+    digitalWrite(BACK_LIGHTS, LOW);
     break;
   case 'B':
     // Backward
     backward();
+    digitalWrite(BACK_LIGHTS, HIGH);
     break;
   case 'R':
     // Right
     right();
+    digitalWrite(BACK_LIGHTS, LOW);
     break;
   case 'L':
     // Left
     left();
+    digitalWrite(BACK_LIGHTS, LOW);
     break;
   case 'I':
     // Heartbeat - do nothing
+    break;
+  case 'M':
+    mode = !mode;
+    station();
     break;
   default:
     // Big error, stop
@@ -78,6 +92,8 @@ char input(){
   if (tooth.available() > 0){
     // Read Bluetooth data (should be a single digit char)
     com_time = millis();
+    digitalWrite(BLUETOOTH_LIGHT, HIGH);
+    paired = true;
     return tooth.read();
   }
   else{
@@ -91,54 +107,38 @@ void output(int sonar){
 }
 
 void loop(){
-  // Get Bluetooth serial data (char)
   data = input();
-  if (data == ':' && (com_time + 5) < millis()){
+  if (data == ':' && paired == false){
+      data = 'S';
+  }
+  
+  // Stop if no command has been sent in 2.5 seconds
+  if (data == ':' && (com_time + 2.5) < millis()){
+    digitalWrite(BLUETOOTH_LIGHT, LOW);
+    digitalWrite(BACK_LIGHTS, HIGH);
     station();
     Serial.print("LOS - Stopping");
+    paired = false;
+    mode = false;
   }
-  if (data == 'I'){
-    Serial.print("Proceed");
-  }
-  if (data == 'M'){
-    mode = !mode;
-    station();
-  }
-  if (data == 'D'){
-    debug = !debug;
-  }
-  int delay = 10;
   
   // Assign distance variable to the sonar distance
   unsigned int distance = sonar.ping_cm();
 
-  // Assign IR sensor values to the correct variables
-  // Right IR sensor
-  int Right_Value = digitalRead(RIGHT);
-  // Left IR sensor
-  int Left_Value = digitalRead(LEFT);
-  
-  if (debug == true){
-    delay = 500;
-  }
-  
-  /**
-  if (check_sensors()== 1){
-    continue;
-  if (check_sensors()== 2){
-    continue; 
-  if (check_sensors()== 2){
-    continue; 
-  }**/
-
   // Manual Drive mode
-  if (mode == false && input != 'I' && input != ':' && input != 'D'){
-    drive();
+  if (mode == false){
+    interval = 25;
+    manual_input();
     output(distance);
   }
   
   // Object Following mode
   if (mode == true){
+    interval = 50;
+    // Assign IR sensor values to the correct variables
+    int Right_Value = digitalRead(RIGHT);
+    int Left_Value = digitalRead(LEFT);
+    
     // Sonar detects distance of less than 10cm
     if(distance < 10) 
     {
@@ -193,5 +193,5 @@ void loop(){
     }
   }
   // Wait for x miliseconds 
-  delayMicroseconds(delay);
+  delayMicroseconds(interval);
 }
