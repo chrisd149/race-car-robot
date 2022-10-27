@@ -16,6 +16,7 @@
 
 int interval;
 int timeout = 0;
+int timeout_limit = 50;
 char data = 'I';
 char last_input = 'I';
 bool mode = false;
@@ -55,39 +56,42 @@ void manual_input(){
   else {
     last_input = data;
   }
-  Serial.print(data);
+  //if (data != 'I'){
+    //Serial.print(data);
+  //}
   switch (data){
   case 'S':
     // Stop 
     station();
     digitalWrite(BACK_LIGHTS, HIGH);
+    Serial.println("Stop");
     break;
   case 'F':
     // Forward
     forward();
     digitalWrite(BACK_LIGHTS, LOW);
+    Serial.println("Forward");
     break;
   case 'B':
     // Backward
     backward();
     digitalWrite(BACK_LIGHTS, HIGH);
+    Serial.println("Backward");
     break;
   case 'R':
     // Right
     right();
     digitalWrite(BACK_LIGHTS, LOW);
+    Serial.println("Right");
     break;
   case 'L':
     // Left
     left();
     digitalWrite(BACK_LIGHTS, LOW);
+    Serial.println("Left");
     break;
   case 'I':
     // Heartbeat - do nothing
-    break;
-  default:
-    // Big error, stop
-    station();
     break;
   }
 }
@@ -110,8 +114,35 @@ void output(int sonar){
   tooth.write(sonar); // In cm
 }
 
+void test(){
+  Serial.println("Forward");
+  forward();
+  delay(2500);
+  Serial.println("Right");
+  right();
+  delay(2500);
+  Serial.println("Left");
+  left();
+  delay(2500);
+  Serial.println("Backward");
+  backward();
+  delay(2500);
+  Serial.println("Stop");
+  station();
+  delay(2500);
+}
+
 void loop(){
+  if (mode == false){
+    timeout_limit = 50;
+  }
+  else{
+    timeout_limit = 5;
+  }
   data = input();
+  if (data == 'D'){
+    test();
+  }
   // TODO: fixed this up a bit
   // Currently spams stop commands in parked, not bad, but wastes resources
   if (paired == false){
@@ -131,11 +162,11 @@ void loop(){
     else if (data == ':'){
       timeout += 1;
     }
-    if (timeout > 50){
+    if (timeout > timeout_limit){
       digitalWrite(BLUETOOTH_LIGHT, LOW);
       digitalWrite(BACK_LIGHTS, HIGH);
+      Serial.print("!");
       station();
-      Serial.print("LOS - Stopping");
       paired = false;
       mode = false;
       timeout = 0;
@@ -145,6 +176,10 @@ void loop(){
   if (data == 'M'){
     mode = !mode;
     station();
+  }
+
+  if (data == 'S'){
+    mode = false;
   }
   
   // Assign distance variable to the sonar distance
@@ -160,13 +195,20 @@ void loop(){
   
   // Object Following mode
   if (mode == true){
-    interval = 50;
+    interval = 1000;
     // Assign IR sensor values to the correct variables
     int Right_Value = digitalRead(RIGHT);
     int Left_Value = digitalRead(LEFT);
-    
+
+    if (distance == 0){
+      Serial.println("Sonar not connected");
+      mode = false;
+      station();
+      parked = true;
+      paired = false;
+    }
     // Sonar detects distance of less than 10cm
-    if(distance < 10) 
+    else if(distance < 10) 
     {
       backward();
       if (debug == true){
@@ -197,7 +239,7 @@ void loop(){
       }
     }
     // Left IR sensor detects an object
-    if(Right_Value==0 && Left_Value==1) // Turn left
+    else if(Right_Value==0 && Left_Value==1) // Turn left
     {
       left();
       if (debug == true){
@@ -207,7 +249,7 @@ void loop(){
       }
     }
     // Right IR sensor detects an object
-    if(Right_Value==1 && Left_Value==0) 
+    else if(Right_Value==1 && Left_Value==0) 
     // Turn right
     {
       right();

@@ -2,8 +2,8 @@
 #include "Arduino.h"
 
 // Define motor RPM
-#define motorArpm 170
-#define motorBrpm 170
+#define motorArpm 100
+#define motorBrpm 100
 
 void forward(){
   // All motors move forward
@@ -27,22 +27,22 @@ void backward(){
 
 void right(){
   // Right motors move backward, left motors move forward
-  digitalWrite(in1, HIGH);
+  digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
-  analogWrite(enA, 150);
+  analogWrite(enA, 0);
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-  analogWrite(enB, 160);  
+  analogWrite(enB, 75);  
 }
 
 void left(){
   // Right motors move forward, left motors move backward
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  analogWrite(enA, 150);
+  analogWrite(enA, 75);
   digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-  analogWrite(enB, 160);
+  digitalWrite(in4, LOW);
+  analogWrite(enB, 0);
 }
 
 void station(){
