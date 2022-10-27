@@ -16,8 +16,8 @@
 
 int interval;
 int timeout = 0;
-char data = 'S';
-char last_input = 'S';
+char data = 'I';
+char last_input = 'I';
 bool mode = false;
 bool debug = true;
 bool paired = false;
@@ -49,7 +49,13 @@ void setup() {
 
 void manual_input(){
   // Drive command sent, send to Driver input
-  last_input = data;
+  if (last_input == data){
+    data = 'I';
+  }
+  else {
+    last_input = data;
+  }
+  Serial.print(data);
   switch (data){
   case 'S':
     // Stop 
@@ -88,11 +94,11 @@ void manual_input(){
 
 char input(){
   // Check bluetooth is connected
-  if (tooth.available() > 0){
+  if (Serial.available() > 0){
     // Read Bluetooth data (should be a single digit char)
     digitalWrite(BLUETOOTH_LIGHT, HIGH);
     paired = true;
-    return tooth.read();
+    return Serial.read();
   }
   else{
     return ':';
@@ -141,7 +147,6 @@ void loop(){
     station();
   }
   
-  Serial.print(data);
   // Assign distance variable to the sonar distance
   unsigned int distance = sonar.ping_cm();
     
