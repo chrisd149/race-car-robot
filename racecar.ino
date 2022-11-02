@@ -6,13 +6,6 @@
 #define FRONT_LIGHTS 3
 #define BACK_LIGHTS 4
 #define BLUETOOTH_LIGHT 13
-// Defines pins for IR sensor 
-#define RIGHT 6
-#define LEFT 5
-// Defines pins for sonar sensor
-#define TRIGGER_PIN 12
-#define ECHO_PIN 11
-#define MAX_DISTANCE 100
 
 bool front = false;
 int interval;
@@ -26,7 +19,7 @@ bool paired = false;
 bool parked = true;
 
 // Initalize the sonar sensor  
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+//NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 // Initalize the bluetooth module
 SoftwareSerial tooth(0, 1); // RX | TX 
 
@@ -34,10 +27,6 @@ SoftwareSerial tooth(0, 1); // RX | TX
 void setup() {
   Serial.begin(9600);
   tooth.begin(9600);
-  // Define right IR sensor
-  pinMode(RIGHT, INPUT);
-  // Define left IR sensor
-  pinMode(LEFT, INPUT);
   // LEDs
   pinMode(FRONT_LIGHTS, OUTPUT);
   pinMode(BACK_LIGHTS, OUTPUT);
@@ -47,6 +36,10 @@ void setup() {
   pinMode(in2, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
+  pinMode(in5, OUTPUT);
+  pinMode(in6, OUTPUT);
+  pinMode(in7, OUTPUT);
+  pinMode(in8, OUTPUT);
   digitalWrite(FRONT_LIGHTS, HIGH);
   front = true;
 }
@@ -72,14 +65,13 @@ void manual_input(){
   case 'F':
     // Forward
     forward();
-    digitalWrite(BACK_LIGHTS, LOW);
     Serial.println("Forward");
+    digitalWrite(BACK_LIGHTS, LOW);
     break;
   case 'B':
     // Backward
     backward();
     digitalWrite(BACK_LIGHTS, HIGH);
-    
     Serial.println("Backward");
     break;
   case 'R':
@@ -114,11 +106,13 @@ void manual_input(){
 
 char input(){
   // Check bluetooth is connected
-  if (Serial.available() > 0){
+  if (tooth.available() > 0){
     // Read Bluetooth data (should be a single digit char)
     digitalWrite(BLUETOOTH_LIGHT, HIGH);
     paired = true;
-    return Serial.read();
+    char text = tooth.read();
+    //Serial.print(text);
+    return text;
   }
   else{
     return ':';
@@ -134,7 +128,6 @@ void output(int sonar){
 void test(){
   Serial.println("<---Drive Test--->");
   Serial.println("Forward");
-  forward();
   digitalWrite(13, LOW);
   delay(2000);
   Serial.println("Right");
@@ -206,16 +199,15 @@ void loop(){
   }
   
   // Assign distance variable to the sonar distance
-  unsigned int distance = sonar.ping_cm();
+  //unsigned int distance = sonar.ping_cm();
     
   // Manual Drive mode
   if (mode == false && data != 'M'){
     parked = false;
     interval = 25;
     manual_input();
-    output(distance);
   }
-  
+  /**
   // Object Following mode
   if (mode == true){
     interval = 1000;
@@ -282,7 +274,7 @@ void loop(){
         Serial.print(Right_Value, Left_Value);
       }
     }
-  }
+  }**/
   // Wait for x miliseconds 
   delay(interval);
 }
