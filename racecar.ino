@@ -3,17 +3,18 @@
 #include "src/Driver.c"
 
 // Lights
-#define FRONT_LIGHTS 10
-#define BACK_LIGHTS 11
+#define FRONT_LIGHTS 3
+#define BACK_LIGHTS 4
 #define BLUETOOTH_LIGHT 13
 // Defines pins for IR sensor 
 #define RIGHT 6
 #define LEFT 5
 // Defines pins for sonar sensor
-#define TRIGGER_PIN 7
-#define ECHO_PIN 8
+#define TRIGGER_PIN 12
+#define ECHO_PIN 11
 #define MAX_DISTANCE 100
 
+bool front = false;
 int interval;
 int timeout = 0;
 int timeout_limit = 50;
@@ -27,7 +28,7 @@ bool parked = true;
 // Initalize the sonar sensor  
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 // Initalize the bluetooth module
-SoftwareSerial tooth(2, 3); // RX | TX 
+SoftwareSerial tooth(0, 1); // RX | TX 
 
 // Setup code - only ran at start-up
 void setup() {
@@ -46,6 +47,8 @@ void setup() {
   pinMode(in2, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
+  digitalWrite(FRONT_LIGHTS, HIGH);
+  front = true;
 }
 
 void manual_input(){
@@ -76,6 +79,7 @@ void manual_input(){
     // Backward
     backward();
     digitalWrite(BACK_LIGHTS, HIGH);
+    
     Serial.println("Backward");
     break;
   case 'R':
@@ -89,6 +93,18 @@ void manual_input(){
     left();
     digitalWrite(BACK_LIGHTS, LOW);
     Serial.println("Left");
+    break;
+  case 'O':
+    if (front == true){
+      digitalWrite(FRONT_LIGHTS, LOW);
+      Serial.print("LOW");
+      front = false;
+    }
+    else{
+      digitalWrite(FRONT_LIGHTS, HIGH);
+      Serial.print("HIGH");
+      front = true;
+    }
     break;
   case 'I':
     // Heartbeat - do nothing
@@ -114,22 +130,29 @@ void output(int sonar){
   tooth.write(sonar); // In cm
 }
 
+// Drive test
 void test(){
+  Serial.println("<---Drive Test--->");
   Serial.println("Forward");
   forward();
-  delay(2500);
+  digitalWrite(13, LOW);
+  delay(2000);
   Serial.println("Right");
   right();
-  delay(2500);
+  digitalWrite(13, LOW);
+  delay(2000);
   Serial.println("Left");
   left();
-  delay(2500);
+  digitalWrite(13, LOW);
+  delay(2000);
   Serial.println("Backward");
   backward();
-  delay(2500);
+  digitalWrite(13, HIGH);
+  delay(2000);
   Serial.println("Stop");
   station();
-  delay(2500);
+  digitalWrite(13, HIGH);
+  delay(10000);
 }
 
 void loop(){
