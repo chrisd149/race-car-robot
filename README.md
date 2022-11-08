@@ -1,35 +1,29 @@
-# Autonomous Racecar - Team 10
-This is the project repo for Team 10 EGN3000L Section 6. Our robot is a muscle car design that can autonomously follow an object or be driven manually via a phone app.
+# Race Car Robot "STEM Mobile" - USF Engineering Project
+This is the project repo for Team 10 EGN3000L Section 6. Our robot is a muscle car design that canbe driven manually via a phone app.
 
-[COOL IMAGE HERE]
+![image](https://user-images.githubusercontent.com/48182689/200449319-cee9cf16-b141-4b34-815f-8229b2992e76.png)
+
+The robot with the top shell removed (Note: a breadboard is not required, as it was removed in further design iterations)
 
 ## Materials
 The following materials are required for the robot:
 * 1 Arduino Uno 
-* 2 IR sensors
-* 1 HC-SR04 Sonar sensor
 * 4 6V DC motors & 4 wheels
-* 1 L298N Dual H-Bridge
-* Batteries (TODO: exact number/size)
-* 3D printed chassis (link)
+* 2 L298N Dual H-Bridge
+* 3 9V batteries
+* 3D printed chassis
+* 1 HC-05 Bluetooth module
 * *and a lot of time*
 
 ## Software Installation
-* Install [Arduino IDE](https://www.arduino.cc/en/software)
-* Configure libraries (TODO: add link(s))
-* Upload src/main.ino to Arduino via USB
+* Install the [Arduino IDE](https://www.arduino.cc/en/software)
+* Upload racecar.ino to Arduino via USB
 
 ## Operation
-Once the software is properly installed, all lights on the robot should come on without flashing. If the lights are flashing, please ensure all eletrical connections are proper and secured. 
+Once the software is properly installed and the circuitry is completed, all lights on the robot should come on without flashing. If the back lights and/or front lights are not on, please recheck all connections to verfiy the ciruit is properly completed.
 
-Next, using an Android device, open the controller app, click the "Devices" button and look for a device named *HC-05*. Tap on the device, and the app should take a moment to connect to the robot. Once connected, you will have some options. The options that we will go indepth here are the two main options for driving the robot: Object Following and Manual Drive mode.
+Next, using either an iOS or Android device, open the controller app, click the "Devices" button and look for a device named *HC-05*. Tap on the device, and the app should take a moment to connect to the robot. Once connected, you will now have the ability to drive the robot
 
-### Object Following Mode
-Click the *Mode* slider button in the top right to the on posistion.
+Simply click the directional buttons to move the robot in the respective directions (up button = move forward, right button = turn right, etc.)
 
-The robot will begin running through a loop of automated commands to follow an object in front of itself. It is intended to keep a close distance to any object it detects, whether it be a human, hand, cat or anything that you trust to put in front of a robot with a top speed of 5mp/h. Please note that at any time you wish to stop the robot, you can click the *STOP* button on the app or disconnect the app from the robot (it is designed to stop moving if connection is lost with the host phone.) 
-
-### Manual Drive Mode
-First, ensure that Object Following Mode is not active, and if it is active, disable it by clicking the mode button to the off posistion. Simply click the directional buttons to move the robot in the respective directions (up button = move forward, right button = turn right, etc.) 
-
-OPTIONAL: Enabling *Auto Stop* will use the sonar sensor to automatically stop the robot if it gets too close to an object. This can be handy for first time users!
+The back lights will only turn on when the robot is backing up or is stopped, while the front lights can be toggled on/off via the "Lights" button.
