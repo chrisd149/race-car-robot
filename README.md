@@ -1,5 +1,5 @@
 # Race Car Robot "STEM Mobile" - USF Engineering Project
-This is the project repo for Team 10 EGN3000L Section 6. Our robot is a muscle car design that canbe driven manually via a phone app.
+This is the project repo for Team 10 EGN3000L Section 6. Our robot is a muscle car design that can be driven manually via a phone app.
 
 ![image](https://user-images.githubusercontent.com/48182689/200449319-cee9cf16-b141-4b34-815f-8229b2992e76.png)
 
