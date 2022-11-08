@@ -27,3 +27,7 @@ Next, using either an iOS or Android device, open the controller app, click the 
 Simply click the directional buttons to move the robot in the respective directions (up button = move forward, right button = turn right, etc.)
 
 The back lights will only turn on when the robot is backing up or is stopped, while the front lights can be toggled on/off via the "Lights" button.
+
+![image](https://user-images.githubusercontent.com/48182689/200457770-ab3af917-7ce6-4f1a-b08d-8e4dc4db1636.png)
+
+The current app iteration
