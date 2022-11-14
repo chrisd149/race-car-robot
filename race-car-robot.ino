@@ -10,7 +10,7 @@ bool front = false;
 int interval = 25;
 int timeout = 0;
 int timeout_limit = 25;
-int rpm = 100;
+int rpm = 125;
 char data = 'I';
 char last_input = 'I';
 bool debug = true;
@@ -37,6 +37,7 @@ void setup() {
   pinMode(in6, OUTPUT);
   pinMode(in7, OUTPUT);
   pinMode(in8, OUTPUT);
+  // RPM pins
   pinMode(enA, OUTPUT);
   pinMode(enB, OUTPUT);
   pinMode(enC, OUTPUT);
@@ -151,13 +152,13 @@ void loop(){
   // Map data to rpm values
   switch (data){
     case '<':
-      rpm = 50;
+      rpm = 125;
       break;
     case '-':
-      rpm = 100;
+      rpm = 175;
       break;
     case '>':
-      rpm = 150;
+      rpm = 250;
       break;  
   }
 

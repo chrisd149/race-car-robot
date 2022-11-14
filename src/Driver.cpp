@@ -10,76 +10,76 @@ void forward(int rpm){
   // All motors move forward
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
-  digitalWrite(enA, rpm);
+  analogWrite(enA, rpm);
   
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-  digitalWrite(enB, rpm);
+  analogWrite(enB, rpm);
 
   digitalWrite(in5, HIGH);
   digitalWrite(in6, LOW);
-  digitalWrite(enC, rpm);
+  analogWrite(enC, rpm);
 
   digitalWrite(in7, HIGH);
   digitalWrite(in8, LOW);
-  digitalWrite(enD, rpm);
+  analogWrite(enD, rpm);
 }
 
 void backward(int rpm){
   // All motors move backwards at the set rpm
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  digitalWrite(enA, rpm);
+  analogWrite(enA, rpm);
 
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  digitalWrite(enB, rpm);
+  analogWrite(enB, rpm);
 
   digitalWrite(in5, LOW);
   digitalWrite(in6, HIGH);
-  digitalWrite(enC, rpm);
+  analogWrite(enC, rpm);
 
   digitalWrite(in7, LOW);
   digitalWrite(in8, HIGH);
-  digitalWrite(enD, rpm);
+  analogWrite(enD, rpm);
 }
 
 void right(int rpm){
   // Right motors move backward, left motors move forward
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
-  digitalWrite(enA, rpm);
+  analogWrite(enA, rpm);
 
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  digitalWrite(enB, rpm);
+  analogWrite(enB, rpm);
 
-  digitalWrite(in5, HIGH);
-  digitalWrite(in6, LOW);
-  digitalWrite(enC, rpm);
+  digitalWrite(in5, LOW);
+  digitalWrite(in6, HIGH);
+  analogWrite(enC, rpm);
 
-  digitalWrite(in7, LOW);
-  digitalWrite(in8, HIGH);
-  digitalWrite(enD, rpm);   
+  digitalWrite(in7, HIGH);
+  digitalWrite(in8, LOW);
+  analogWrite(enD, rpm);   
 }
 
 void left(int rpm){
   // Right motors move forward, left motors move backward
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  digitalWrite(enA, rpm);
+  analogWrite(enA, rpm);
 
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-  digitalWrite(enB, rpm);
+  analogWrite(enB, rpm);
 
-  digitalWrite(in5, LOW);
-  digitalWrite(in6, HIGH);
-  digitalWrite(enC, rpm);
+  digitalWrite(in5, HIGH);
+  digitalWrite(in6, LOW);
+  analogWrite(enC, rpm);
 
-  digitalWrite(in7, HIGH);
-  digitalWrite(in8, LOW);
-  digitalWrite(enD, rpm);  
+  digitalWrite(in7, LOW);
+  digitalWrite(in8, HIGH);
+  analogWrite(enD, rpm);  
 }
 
 void station(){

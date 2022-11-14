@@ -2,20 +2,20 @@
 #define Driver
 
 // Motor RPM pins
-#define enA A0
-#define enB A1
-#define enC A2
-#define enD A3
+const int enA = 5;
+const int enB = 6;
+const int enC = 9;
+const int enD = 10;
 
 // Defines some constants for the motor pins
-const int in1 = 9;
-const int in2 = 10;
-const int in3 = 11;
-const int in4 = 12;
-const int in5 = 5;
-const int in6 = 6;
-const int in7 = 7;
-const int in8 = 8;
+#define in1 A3
+#define in2 A2
+#define in3 A1
+#define in4 A0
+const int in5 = 7;
+const int in6 = 8;
+const int in7 = 11;
+const int in8 = 12;
 
 // Driver function prototypes
 void forward(int);
