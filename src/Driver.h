@@ -1,6 +1,12 @@
 #ifndef Driver
 #define Driver
 
+// Motor RPM pins
+#define enA A0
+#define enB A1
+#define enC A2
+#define enD A3
+
 // Defines some constants for the motor pins
 const int in1 = 9;
 const int in2 = 10;
@@ -10,14 +16,12 @@ const int in5 = 5;
 const int in6 = 6;
 const int in7 = 7;
 const int in8 = 8;
-//const int enA = 9;
-//const int enB = 10;
 
 // Driver function prototypes
-void forward();
-void backward();
-void right();
-void left();
+void forward(int);
+void backward(int);
+void right(int);
+void left(int);
 void station();
 
 #endif

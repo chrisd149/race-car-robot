@@ -1,76 +1,85 @@
 #include "Driver.h"
 #include "Arduino.h"
 
-// Define motor RPM
-#define motorArpm 100
-#define motorBrpm 100
-// in1, in2 - Front Left
-// in3, in4 - Front Right
-// in5, in6 - Back Left
-// in7, in8 - Back Right
+// in1, in2, enA - Front Left
+// in3, in4, enB - Front Right
+// in5, in6, enC - Back Left
+// in7, in8, enD - Back Right
 
-void forward(){
+void forward(int rpm){
   // All motors move forward
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
-  //analogWrite(enA, motorArpm);
+  digitalWrite(enA, rpm);
+  
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-  //analogWrite(enB, motorBrpm);
+  digitalWrite(enB, rpm);
+
   digitalWrite(in5, HIGH);
   digitalWrite(in6, LOW);
-  //analogWrite(enA, motorArpm);
+  digitalWrite(enC, rpm);
+
   digitalWrite(in7, HIGH);
   digitalWrite(in8, LOW);
-  //analogWrite(enB, motorBrpm);
+  digitalWrite(enD, rpm);
 }
 
-void backward(){
+void backward(int rpm){
   // All motors move backwards at the set rpm
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  //analogWrite(enA, motorArpm);
+  digitalWrite(enA, rpm);
+
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  //analogWrite(enB, motorBrpm);
+  digitalWrite(enB, rpm);
+
   digitalWrite(in5, LOW);
   digitalWrite(in6, HIGH);
-  //analogWrite(enA, motorArpm);
+  digitalWrite(enC, rpm);
+
   digitalWrite(in7, LOW);
   digitalWrite(in8, HIGH);
-  //analogWrite(enB, motorBrpm);
+  digitalWrite(enD, rpm);
 }
 
-void right(){
+void right(int rpm){
   // Right motors move backward, left motors move forward
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
-  //analogWrite(enA, 0);
+  digitalWrite(enA, rpm);
+
   digitalWrite(in3, LOW);
   digitalWrite(in4, HIGH);
-  //analogWrite(enB, 75);
+  digitalWrite(enB, rpm);
+
   digitalWrite(in5, HIGH);
   digitalWrite(in6, LOW);
-  //analogWrite(enA, 0);
+  digitalWrite(enC, rpm);
+
   digitalWrite(in7, LOW);
   digitalWrite(in8, HIGH);
-  //analogWrite(enB, 75);   
+  digitalWrite(enD, rpm);   
 }
 
-void left(){
+void left(int rpm){
   // Right motors move forward, left motors move backward
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  //analogWrite(enA, 0);
+  digitalWrite(enA, rpm);
+
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
-  //analogWrite(enB, 75);
+  digitalWrite(enB, rpm);
+
   digitalWrite(in5, LOW);
   digitalWrite(in6, HIGH);
-  //analogWrite(enA, 0);
+  digitalWrite(enC, rpm);
+
   digitalWrite(in7, HIGH);
   digitalWrite(in8, LOW);
-  //analogWrite(enB, 75);  
+  digitalWrite(enD, rpm);  
 }
 
 void station(){
@@ -83,6 +92,4 @@ void station(){
   digitalWrite(in6, LOW);
   digitalWrite(in7, LOW);
   digitalWrite(in8, LOW);
-  //analogWrite(enA, 0);
-  //analogWrite(enB, 0);
 }

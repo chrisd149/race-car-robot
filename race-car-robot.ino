@@ -10,6 +10,7 @@ bool front = false;
 int interval = 25;
 int timeout = 0;
 int timeout_limit = 25;
+int rpm = 100;
 char data = 'I';
 char last_input = 'I';
 bool debug = true;
@@ -36,8 +37,10 @@ void setup() {
   pinMode(in6, OUTPUT);
   pinMode(in7, OUTPUT);
   pinMode(in8, OUTPUT);
-  digitalWrite(FRONT_LIGHTS, HIGH);
-  front = true;
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(enC, OUTPUT);
+  pinMode(enD, OUTPUT);
 }
 
 void manual_input(){
@@ -48,9 +51,6 @@ void manual_input(){
   else {
     last_input = data;
   }
-  //if (data != 'I'){
-    //Serial.print(data);
-  //}
   switch (data){
   case 'S':
     // Stop 
@@ -60,25 +60,25 @@ void manual_input(){
     break;
   case 'F':
     // Forward
-    forward();
+    forward(rpm);
     Serial.println("Forward");
     digitalWrite(BACK_LIGHTS, LOW);
     break;
   case 'B':
     // Backward
-    backward();
+    backward(rpm);
     digitalWrite(BACK_LIGHTS, HIGH);
     Serial.println("Backward");
     break;
   case 'R':
     // Right
-    right();
+    right(rpm);
     digitalWrite(BACK_LIGHTS, LOW);
     Serial.println("Right");
     break;
   case 'L':
     // Left
-    left();
+    left(rpm);
     digitalWrite(BACK_LIGHTS, LOW);
     Serial.println("Left");
     break;
@@ -118,18 +118,19 @@ char input(){
 void test(){
   Serial.println("<---Drive Test--->");
   Serial.println("Forward");
+  forward(rpm);
   digitalWrite(13, LOW);
   delay(2000);
   Serial.println("Right");
-  right();
+  right(rpm);
   digitalWrite(13, LOW);
   delay(2000);
   Serial.println("Left");
-  left();
+  left(rpm);
   digitalWrite(13, LOW);
   delay(2000);
   Serial.println("Backward");
-  backward();
+  backward(rpm);
   digitalWrite(13, HIGH);
   delay(2000);
   Serial.println("Stop");
@@ -147,11 +148,25 @@ void loop(){
     test();
   }
 
+  // Map data to rpm values
+  switch (data){
+    case '<':
+      rpm = 50;
+      break;
+    case '-':
+      rpm = 100;
+      break;
+    case '>':
+      rpm = 150;
+      break;  
+  }
+
   // Sets parking if not paired 
   if (paired == false){
     if (parked == false){
       data = 'S';
       parked = true;
+      digitalWrite(FRONT_LIGHTS, LOW);
     }
     else {
       data = 'I';
@@ -159,10 +174,13 @@ void loop(){
   }
   
   if (paired == true){
+    if (parked == true){
+      digitalWrite(FRONT_LIGHTS, HIGH);
+      parked = false;
+    }
     // Good data - reset timeout
     if (data != ':'){
       timeout = 0;
-      parked = false;
       manual_input();
     }
     // No/bad data - add to timeout
