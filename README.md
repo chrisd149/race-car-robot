@@ -51,16 +51,15 @@ The back lights will only turn on when the robot is backing up or is stopped, wh
 
 * **Design** - 100% complete (Completed October 2022)
 * **Electronics/Circuitry** - 100% complete (Completed Early November 2022)
-* **Software** - 90% complete
-* **Hardware** - 90% complete 
-* **Testing** - 85% complete
+* **Software** - 95% complete
+* **Hardware** - 95% complete 
+* **Testing** - 90% complete
 
 ### Outstanding tasks
-* **Driver code** - Our final goal for the robot code is to add RPM adjustiablity. This is set to be complete by the end of today, 11/14/2022.
-* **App** - Tests with the Android app have shown it to ocassionally crash after 5 minutes of use. This is due to an issue with the app maker we have chosen, and will be solved once we migrate to a new app maker (which will also support iOS). We will also add a slider for RPM adjustiabilty.
-* **Top shell** - The top shell of the robot has been designed, however, we are waiting for it to be 3D printed. Once printed and assembled, we will fully update the Hardware Assembly section. 
-* **Testing** - Testing so far has shown the robot to be very fun and easy to use, and is meeting our engineering targets. However, we are still awaiting for the full robot to be assembled, which will allow us to fully test the robot for the intended consumer use. 
+* **App** - Tests with the Android app have shown it to ocassionally crash after 5 minutes of use. This is due to an issue with the app maker we have chosen, and will be solved once we migrate to a new app maker (which will also support iOS). 
+* **Suspension** - From testing, we have decided to add spring-based suspension to each wheel. This is virtually done, we are awaiting final assembly soon.
+* **Testing** - Testing so far has shown the robot to be very fun and easy to use, and is meeting our engineering targets.
 
-The project deadline is 11/28/2022. We are on-track for hardware & software complete by 11/17/2022, with testing concluding on 11/21/2022.
+The project deadline is 11/28/2022. We are on-track for hardware & software complete by 11/21/2022, with testing concluding on 11/23/2022.
 
-The next project status update will be made here on 11/16/2022.
+The next project status update will be made here on 11/21/2022.
