@@ -47,7 +47,7 @@ The back lights will only turn on when the robot is backing up or is stopped, wh
 | The current app iteration. *Layout is subject to change before 11/28 deadline* |
 
 ## Project Status
-*As of 11/14/2022*
+*As of 11/19/2022*
 
 * **Design** - 100% complete (Completed October 2022)
 * **Electronics/Circuitry** - 100% complete (Completed Early November 2022)
