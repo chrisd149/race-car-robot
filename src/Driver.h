@@ -19,7 +19,11 @@ const int in8 = 12;
 
 // Driver function prototypes
 void forward(int);
+void forward_r(int);
+void forward_l(int);
 void backward(int);
+void backward_r(int);
+void backward_l(int);
 void right(int);
 void left(int);
 void station();

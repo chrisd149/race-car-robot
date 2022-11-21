@@ -65,6 +65,30 @@ void manual_input(){
     Serial.println("Forward");
     digitalWrite(BACK_LIGHTS, LOW);
     break;
+  case '1':
+    // Forward Right
+    forward_r(rpm);
+    Serial.println("Forward Right");
+    digitalWrite(BACK_LIGHTS, LOW);
+    break;
+  case '2':
+    // Forward Left
+    forward_l(rpm);
+    Serial.println("Forward Left");
+    digitalWrite(BACK_LIGHTS, LOW);
+    break;
+  case '3':
+    // Backward Right
+    backward_r(rpm);
+    Serial.println("Backward Right");
+    digitalWrite(BACK_LIGHTS, LOW);
+    break;
+  case '4':
+    // Backward Left
+    backward_l(rpm);
+    Serial.println("Backward Left");
+    digitalWrite(BACK_LIGHTS, LOW);
+    break;
   case 'B':
     // Backward
     backward(rpm);
